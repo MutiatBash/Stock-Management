@@ -1,9 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 
-// Usage:
-//   const confirmDelete = useConfirmDelete();
-//   confirmDelete.request('"Product Name"', () => doDelete());
-//   render <ConfirmModal {...confirmDelete} /> once near the root of the page
 export function useConfirmDelete() {
   const [label, setLabel] = useState('');
   const [open, setOpen] = useState(false);
