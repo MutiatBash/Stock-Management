@@ -35,6 +35,17 @@ export default function Settings() {
           <button type="submit" className="btn btn-primary">Save Default</button>
         </form>
       </section>
+
+      <section className="add-item-section">
+        <h2>Export Your Data</h2>
+        <p className="page-subtitle">
+          Your data is stored in your Supabase database, separate from the app server. This button downloads a
+          complete copy of it — products, services, sales, service records, debts and stock activity — as one file.
+          Keep a copy somewhere safe (email it to yourself or save it to a USB drive) and do it regularly. Staff
+          passwords are not included.
+        </p>
+        <a href="/api/backup" className="btn btn-secondary">Download Data Export</a>
+      </section>
     </Layout>
   );
 }
