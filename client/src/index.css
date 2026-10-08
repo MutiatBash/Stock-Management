@@ -343,9 +343,24 @@ input[type="number"]::-webkit-outer-spin-button {
   font-size: 14px;
   font-weight: 600;
   text-decoration: none;
+  cursor: pointer;
 }
-.filter-pill:hover { border-color: var(--brand); color: var(--brand-dark); }
-.filter-pill-active { background: var(--brand); border-color: var(--brand); color: #fff; }
+.filter-pill:hover {
+  border-color: var(--brand);
+  color: var(--brand-dark);
+}
+
+.filter-pill-active {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
+}
+
+.filter-pill-active:hover {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
+}
 
 .item-grid {
   display: grid;
@@ -849,6 +864,9 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 .sidebar {
   width: 220px;
+  height: 100vh;
+  position: sticky;
+  top: 0;
   flex-shrink: 0;
   background: var(--ink);
   color: rgba(255,255,255,0.85);
@@ -870,6 +888,7 @@ input[type="number"]::-webkit-outer-spin-button {
   padding: 12px 0;
   flex: 1;
   overflow-y: auto;
+  min-height: 0;
 }
 .sidebar-nav a {
   display: flex;
@@ -897,7 +916,28 @@ input[type="number"]::-webkit-outer-spin-button {
   letter-spacing: 0.05em;
   color: rgba(255,255,255,0.35);
 }
+.sidebar-logout {
+  width: 100%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  border: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.65);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+}
 
+.sidebar-logout:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+}
 .main-col {
   flex: 1;
   display: flex;
@@ -1071,6 +1111,22 @@ input[type="number"]::-webkit-outer-spin-button {
 .page-btn-active { background: var(--brand); border-color: var(--brand); color: #fff; }
 .page-btn-disabled { opacity: 0.4; pointer-events: none; }
 .page-ellipsis { color: var(--ink-soft); padding: 0 4px; }
+
+.items-per-page {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.items-per-page select {
+  padding: 6px 8px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--card);
+  color: var(--ink);
+  font: inherit;
+  font-size: 13px;
+}
 
 /* ---------- Mobile ---------- */
 @media (max-width: 480px) {

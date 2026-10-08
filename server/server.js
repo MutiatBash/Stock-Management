@@ -328,7 +328,17 @@ app.get(
       lowStockCount: allProducts.filter((p) => p.quantity <= p.low_stock_level).length,
     };
 
-    res.json({ ...paginate(filtered, req.query.page, 10), categories, summary, defaultVatRate: await getDefaultVatRate() });
+    const limit = Math.min(
+      Math.max(parseInt(req.query.limit, 10) || 25, 1),
+      100
+    );
+
+    res.json({
+      ...paginate(filtered, req.query.page, limit),
+      categories,
+      summary,
+      defaultVatRate: await getDefaultVatRate(),
+    });
   })
 );
 

@@ -28,17 +28,6 @@ import ProductModal from '../components/ProductModal';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/client';
 
-const CATEGORY_OPTIONS = [
-  'Charger', 'Cable', 'Adapter', 'Pouch', 'Laptop Bag', 'Screen Guard', 'Keyboard',
-  'Mouse', 'Headset', 'Speaker', 'Battery', 'Memory (RAM)', 'Storage (SSD/HDD)',
-  'Cooling Pad', 'Flash Drive', 'Other Accessory',
-];
-// const CATEGORY_ICONS = {
-//   Charger: '🔌', Cable: '🔗', Adapter: '🔌', Pouch: '👝', 'Laptop Bag': '🎒',
-//   'Screen Guard': '🛡️', Keyboard: '⌨️', Mouse: '🖱️', Headset: '🎧', Speaker: '🔊',
-//   Battery: '🔋', 'Memory (RAM)': '💾', 'Storage (SSD/HDD)': '💽', 'Cooling Pad': '🌬️', 'Flash Drive': '💿',
-// };
-
 const CATEGORY_ICONS = {
   Charger: PlugZap,
   Cable: Cable,
@@ -78,13 +67,26 @@ export default function Products() {
   const search = params.get('search') || '';
   const category = params.get('category') || '';
   const page = params.get('page') || '1';
+  const itemsPerPage = Number(params.get('limit')) || 25;
 
   useEffect(() => {
     load();
-  }, [search, category, page]);
+  }, [search, category, page, itemsPerPage]);
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+  }, [search, category, page, itemsPerPage]);
 
   async function load() {
-    const qs = new URLSearchParams({ search, category, page }).toString();
+    const qs = new URLSearchParams({
+      search,
+      category,
+      page,
+      limit: itemsPerPage,
+    }).toString();
     const result = await api.get(`/products?${qs}`);
     setData(result);
     setForm((f) => (f === emptyForm ? { ...emptyForm, vat_rate: result.defaultVatRate } : f));
@@ -570,7 +572,30 @@ export default function Products() {
                 </tbody>
               </table>
             </div>
-            <Pagination currentPage={data.currentPage} totalPages={data.totalPages} onPageChange={(p) => updateParams({ page: String(p) })} />
+              <div>
+                <Pagination currentPage={data.currentPage} totalPages={data.totalPages} onPageChange={(p) => updateParams({ page: String(p) })} />
+                <div className="toolbar-actions">
+                  <label className="items-per-page">
+                    <span className="muted">Show</span>
+
+                    <select
+                      value={itemsPerPage}
+                      onChange={(e) =>
+                        updateParams({
+                          limit: e.target.value,
+                        })
+                      }
+                    >
+                      <option value="25">25</option>
+                      <option value="50">50</option>
+                      <option value="100">100</option>
+                    </select>
+
+                    <span className="muted">per page</span>
+                  </label>
+
+                  <span className="muted">{data.totalItems ?? 0} total</span>
+                </div></div>
           </>
         )}
       </div>

@@ -1,19 +1,33 @@
 import { NavLink } from 'react-router-dom';
+import {
+  ReceiptText,
+  Package,
+  Wrench,
+  ClipboardList,
+  CreditCard,
+  Calculator,
+  ChartNoAxesCombined,
+  Users,
+  Settings,
+  LogOut,
+  Monitor,
+  Bell,
+} from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const links = [
-  { to: '/', label: 'New Sale', icon: '🧾', end: true },
-  { to: '/products', label: 'Products', icon: '📦' },
-  { to: '/services', label: 'Services', icon: '🛠️' },
-  { to: '/service-jobs', label: 'Service Records', icon: '📋' },
-  { to: '/debts', label: 'Debts', icon: '💳' },
+  { to: '/', label: 'New Sale', icon: ReceiptText, end: true },
+  { to: '/products', label: 'Products', icon: Package },
+  { to: '/services', label: 'Services', icon: Wrench },
+  { to: '/service-jobs', label: 'Service Records', icon: ClipboardList },
+  { to: '/debts', label: 'Debts', icon: CreditCard },
 ];
 
 const adminLinks = [
-  { to: '/statements', label: 'Statements', icon: '🧮' },
-  { to: '/profit-loss', label: 'Profit & Loss', icon: '📈' },
-  { to: '/staff', label: 'Staff', icon: '👥' },
-  { to: '/settings', label: 'Settings', icon: '⚙️' },
+  { to: '/statements', label: 'Statements', icon: Calculator },
+  { to: '/profit-loss', label: 'Profit & Loss', icon: ChartNoAxesCombined },
+  { to: '/staff', label: 'Staff', icon: Users },
+  { to: '/settings', label: 'Settings', icon: Settings },
 ];
 
 export default function Layout({ title, children }) {
@@ -22,11 +36,16 @@ export default function Layout({ title, children }) {
   return (
     <div className="app-shell">
       <aside className="sidebar">
-        <div className="sidebar-brand">💻 <span>IntelMind</span></div>
+        <div className="sidebar-brand">
+          <Monitor size={20} strokeWidth={1.8} />
+           <span>IntelMind</span></div>
         <nav className="sidebar-nav">
           {links.map((l) => (
             <NavLink key={l.to} to={l.to} end={l.end} className={({ isActive }) => (isActive ? 'active' : '')}>
-              <span className="side-icon">{l.icon}</span> {l.label}
+              <span className="side-icon">
+                <l.icon size={18} strokeWidth={1.8} />
+              </span>
+              {l.label}
             </NavLink>
           ))}
           {user?.role === 'admin' && (
@@ -34,12 +53,23 @@ export default function Layout({ title, children }) {
               <div className="sidebar-divider">Admin</div>
               {adminLinks.map((l) => (
                 <NavLink key={l.to} to={l.to} className={({ isActive }) => (isActive ? 'active' : '')}>
-                  <span className="side-icon">{l.icon}</span> {l.label}
+                  <span className="side-icon">
+                    <l.icon size={18} strokeWidth={1.8} />
+                  </span>
+                  {l.label}
                 </NavLink>
               ))}
             </>
           )}
         </nav>
+        <button
+          type="button"
+          className="sidebar-logout"
+          onClick={logout}
+        >
+          <LogOut size={18} strokeWidth={1.8} />
+          <span>Log out</span>
+        </button>
       </aside>
 
       <div className="main-col">
@@ -47,19 +77,14 @@ export default function Layout({ title, children }) {
           <div className="topbar-title">{title}</div>
           <div className="topbar-right">
             <span className="topbar-bell" title={lowStockCount > 0 ? `${lowStockCount} product(s) running low` : 'No alerts'}>
-              🔔{lowStockCount > 0 && <span className="bell-dot"></span>}
+              <Bell />{lowStockCount > 0 && <span className="bell-dot"></span>}
             </span>
-            <a
-              href="#"
+            <div
               className="topbar-avatar"
-              title={user ? `${user.name} (${user.role}) — Log out` : ''}
-              onClick={(e) => {
-                e.preventDefault();
-                logout();
-              }}
+              title={user ? `${user.name} (${user.role})` : ''}
             >
               {user ? user.name.slice(0, 2).toUpperCase() : ''}
-            </a>
+            </div>
           </div>
         </header>
         <main className="page">{children}</main>
