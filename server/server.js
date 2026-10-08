@@ -402,6 +402,48 @@ app.post(
   })
 );
 
+// Remove stock
+app.post(
+  '/api/products/:id/remove-stock',
+  requireAdmin,
+  h(async (req, res) => {
+    const amount = Math.max(1, parseInt(req.body.amount, 10) || 1);
+
+    const row = await db.get(
+      `UPDATE items
+       SET quantity = quantity - ?
+       WHERE id = ? AND quantity >= ?
+       RETURNING quantity, name`,
+      [amount, req.params.id, amount]
+    );
+
+    if (!row) {
+      const product = await db.get(
+        'SELECT id, quantity FROM items WHERE id = ?',
+        [req.params.id]
+      );
+
+      if (!product) {
+        throw httpError(404, 'That product was not found.');
+      }
+
+      throw httpError(400, 'There is not enough stock to remove that amount.');
+    }
+
+    await db.run(
+      'INSERT INTO activity (item_id, item_name, action, change_amount) VALUES (?, ?, ?, ?)',
+      [
+        req.params.id,
+        row.name,
+        'removed',
+        amount,
+      ]
+    );
+
+    res.json({ newQuantity: row.quantity });
+  })
+);
+
 app.delete(
   '/api/products/:id',
   requireAdmin,
